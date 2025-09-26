@@ -1,19 +1,22 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://ep-twilight-shape-aabh6tvj-pooler.westus3.azure.neon.tech/neondb?sslmode=require&channelBinding=require}
-    username: ${DB_USER:neondb_owner}
-    password: ${DB_PASS:npg_AaLhRiv04HTf}
-    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:postgresql://ep-twilight-shape-aabh6tvj-pooler.westus3.azure.neon.tech/neondb?sslmode=require}
+    username: ${DB_USER}
+    password: ${DB_PASS}
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  graphql:
+    graphiql:
+      enabled: true
+      # habilita solo en dev
 management:
   endpoints:
     web:
@@ -23,6 +26,12 @@ management:
     health:
       probes:
         enabled: true
+
+app:
+  graphql:
+    limits:
+      max-depth: 25
+      max-complexity: 1500
 
 logging:
   level:

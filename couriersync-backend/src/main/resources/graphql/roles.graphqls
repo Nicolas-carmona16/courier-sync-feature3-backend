@@ -1,0 +1,28 @@
+type Rol {
+    idRol: ID!
+    nombreRol: String!
+}
+
+input CreateRolInput {
+    nombreRol: String!
+}
+input UpdateRolInput {
+    idRol: ID!
+    nombreRol: String!
+}
+
+type RolPage {
+    content: [Rol!]!
+    pageInfo: PageInfo!
+}
+
+extend type Query {
+    rolById(id: ID!): Rol!
+    roles(page: Int = 0, size: Int = 10): RolPage!
+}
+
+extend type Mutation {
+    createRol(input: CreateRolInput!): Rol!
+    updateRol(input: UpdateRolInput!): Rol!
+    deleteRol(id: ID!): Boolean!
+}

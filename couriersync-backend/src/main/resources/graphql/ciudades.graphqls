@@ -1,0 +1,33 @@
+type Ciudad {
+    idCiudad: ID!
+    nombreCiudad: String!
+    idDepartamento: ID!
+    nombreDepartamento: String!
+}
+
+input CreateCiudadInput {
+    nombreCiudad: String!
+    idDepartamento: ID!
+}
+input UpdateCiudadInput {
+    idCiudad: ID!
+    nombreCiudad: String
+    idDepartamento: ID
+}
+
+type CiudadPage {
+    content: [Ciudad!]!
+    pageInfo: PageInfo!
+}
+
+extend type Query {
+    ciudadById(id: ID!): Ciudad!
+    ciudadesByDepartamento(idDepartamento: ID!, page: Int = 0, size: Int = 10): CiudadPage!
+    searchCiudades(q: String, page: Int = 0, size: Int = 10): CiudadPage!
+}
+
+extend type Mutation {
+    createCiudad(input: CreateCiudadInput!): Ciudad!
+    updateCiudad(input: UpdateCiudadInput!): Ciudad!
+    deleteCiudad(id: ID!): Boolean!
+}

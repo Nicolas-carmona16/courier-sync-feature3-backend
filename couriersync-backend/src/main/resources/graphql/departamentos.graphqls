@@ -1,0 +1,28 @@
+type Departamento {
+    idDepartamento: ID!
+    nombreDepartamento: String!
+}
+
+input CreateDepartamentoInput {
+    nombreDepartamento: String!
+}
+input UpdateDepartamentoInput {
+    idDepartamento: ID!
+    nombreDepartamento: String!
+}
+
+type DepartamentoPage {
+    content: [Departamento!]!
+    pageInfo: PageInfo!
+}
+
+extend type Query {
+    departamentoById(id: ID!): Departamento!
+    departamentos(page: Int = 0, size: Int = 10): DepartamentoPage!
+}
+
+extend type Mutation {
+    createDepartamento(input: CreateDepartamentoInput!): Departamento!
+    updateDepartamento(input: UpdateDepartamentoInput!): Departamento!
+    deleteDepartamento(id: ID!): Boolean!
+}

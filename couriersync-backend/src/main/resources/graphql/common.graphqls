@@ -1,0 +1,11 @@
+# Escalares comunes
+scalar LocalDate
+scalar LocalDateTime
+
+# Paginación estándar
+type PageInfo {
+    page: Int!
+    size: Int!
+    totalElements: Long!
+    totalPages: Int!
+}
