@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +34,10 @@ public class UsuarioService {
     private final CiudadRepository ciudadRepo;
     private final DepartamentoRepository departamentoRepo;
     private final RolRepository rolRepo;
-    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UsuarioView create(CreateUsuarioInput in) {
-        // Unicidad real (solo correo)
+        // Unicidad: correo
         if (usuarioRepo.existsByCorreoIgnoreCase(in.correo()))
             throw new ConflictException("El correo ya está registrado");
 
@@ -51,10 +49,10 @@ public class UsuarioService {
         Rol rol = rolRepo.findById(in.idRol())
                 .orElseThrow(() -> new NotFoundException("Rol no encontrado"));
 
-        // Coherencia: la ciudad pertenece al departamento indicado
+        // Coherencia ciudad-departamento
         UsuarioValidator.assertCiudadPerteneceADepartamento(ciudad, depto.getIdDepartamento());
 
-        var u = new Usuario();
+        Usuario u = new Usuario();
         u.setNombre(in.nombre());
         u.setCorreo(in.correo());
         u.setTelefono(in.telefono());
@@ -64,17 +62,12 @@ public class UsuarioService {
         u.setDepartamento(depto);
         u.setRol(rol);
 
-        // Si tu DTO de create trae contraseña:
-        if (hasPassword(in.contrasena())) {
-            u.setContrasena(passwordEncoder.encode(in.contrasena()));
-        }
-
         return toView(usuarioRepo.save(u));
     }
 
     @Transactional
     public UsuarioView update(UpdateUsuarioInput in) {
-        var u = usuarioRepo.findById(in.idUsuario())
+        Usuario u = usuarioRepo.findById(in.idUsuario())
                 .orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
 
         if (in.correo()!=null && !in.correo().equalsIgnoreCase(u.getCorreo())
@@ -88,17 +81,14 @@ public class UsuarioService {
         if (in.telefono()!=null) u.setTelefono(in.telefono());
         if (in.fechaRegistro()!=null) u.setFechaRegistro(in.fechaRegistro());
         if (in.detalleDireccion()!=null) u.setDetalleDireccion(in.detalleDireccion());
-        if (hasPassword(in.contrasena())) u.setContrasena(passwordEncoder.encode(in.contrasena()));
 
-        // Cambios de FKs (revalidando coherencia)
+        // Cambios de FKs
         Ciudad ciudad = (in.idCiudad()!=null)
-                ? ciudadRepo.findById(in.idCiudad())
-                .orElseThrow(() -> new NotFoundException("Ciudad no encontrada"))
+                ? ciudadRepo.findById(in.idCiudad()).orElseThrow(() -> new NotFoundException("Ciudad no encontrada"))
                 : u.getCiudad();
 
         Departamento depto = (in.idDepartamento()!=null)
-                ? departamentoRepo.findById(in.idDepartamento())
-                .orElseThrow(() -> new NotFoundException("Departamento no encontrado"))
+                ? departamentoRepo.findById(in.idDepartamento()).orElseThrow(() -> new NotFoundException("Departamento no encontrado"))
                 : u.getDepartamento();
 
         if (in.idCiudad()!=null || in.idDepartamento()!=null) {
@@ -159,10 +149,6 @@ public class UsuarioService {
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("No se puede eliminar: existen registros relacionados");
         }
-    }
-
-    private static boolean hasPassword(String value) {
-        return value != null && !value.isBlank();
     }
 
     private UsuarioView toView(Usuario u) {

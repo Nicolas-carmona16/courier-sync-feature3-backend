@@ -10,9 +10,6 @@ public final class UsuarioDTOs {
     // Teléfono exacto 10 dígitos
     private static final String PHONE_REGEX = "^\\d{10}$";
 
-    // Contraseña fuerte: 8+, 1 mayúscula, 1 número, 1 símbolo
-    private static final String PASSWORD_REGEX = "^(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$";
-
     public record CreateUsuarioInput(
             @NotBlank @Size(max = 50)  String nombre,
             @NotBlank @Email @Size(max = 100) String correo,
@@ -22,12 +19,7 @@ public final class UsuarioDTOs {
             @NotBlank @Size(max = 100) String detalleDireccion,
             @NotNull Integer idCiudad,
             @NotNull Integer idDepartamento,
-            @NotNull Integer idRol,
-            @NotBlank
-            @Size(min = 8, max = 100)
-            @Pattern(regexp = PASSWORD_REGEX,
-                    message = "La contraseña debe tener al menos 8 caracteres, 1 mayúscula, 1 número y 1 símbolo")
-            String contrasena
+            @NotNull Integer idRol
     ) {}
 
     public record UpdateUsuarioInput(
@@ -39,11 +31,7 @@ public final class UsuarioDTOs {
             @Size(max = 100) String detalleDireccion,
             Integer idCiudad,
             Integer idDepartamento,
-            Integer idRol,
-            @Size(min = 8, max = 100)
-            @Pattern(regexp = PASSWORD_REGEX,
-                    message = "La contraseña debe tener al menos 8 caracteres, 1 mayúscula, 1 número y 1 símbolo")
-            String contrasena
+            Integer idRol
     ) {}
 
     /** Vista “flattened” con nombres e IDs para no exponer entidades. */

@@ -21,7 +21,7 @@ import java.time.LocalDate;
         }
 )
 @Getter @Setter
-@ToString(exclude = {"ciudad", "departamento", "rol", "contrasena"})
+@ToString(exclude = {"ciudad", "departamento", "rol"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Usuario extends AuditableEntity {
 
@@ -45,9 +45,6 @@ public class Usuario extends AuditableEntity {
 
     @Column(name = "detalle_direccion", nullable = false, length = 100)
     private String detalleDireccion;
-
-    @Column(name = "contrasena", nullable = false, length = 100)
-    private String contrasena;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(

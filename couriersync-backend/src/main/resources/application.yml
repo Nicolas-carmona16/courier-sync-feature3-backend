@@ -30,7 +30,7 @@ spring:
       max-lifetime: 1800000
 
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     validate-on-migrate: true
     out-of-order: false

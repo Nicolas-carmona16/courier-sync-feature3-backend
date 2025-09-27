@@ -9,7 +9,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 
   graphql:
     graphiql:
@@ -19,7 +19,10 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8080/realms/tu-realm}
+          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8080/realms/couriersync}
+
+server:
+  port: ${SERVER_PORT:8081}
 
 management:
   endpoints:

@@ -23,8 +23,6 @@ input CreateUsuarioInput {
     idCiudad: ID!
     idDepartamento: ID!
     idRol: ID!
-    # requerido por BD (NOT NULL) + políticas de seguridad (validadas en DTO)
-    contrasena: String!
 }
 
 input UpdateUsuarioInput {
@@ -37,8 +35,6 @@ input UpdateUsuarioInput {
     idCiudad: ID
     idDepartamento: ID
     idRol: ID
-    # opcional: cambio de contraseña (validada en DTO)
-    contrasena: String
 }
 
 type UsuarioPage {
