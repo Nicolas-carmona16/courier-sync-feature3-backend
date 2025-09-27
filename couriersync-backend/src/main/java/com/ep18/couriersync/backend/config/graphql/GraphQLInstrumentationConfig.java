@@ -1,9 +1,9 @@
 package com.ep18.couriersync.backend.config.graphql;
 
+import graphql.analysis.MaxQueryComplexityInstrumentation;
+import graphql.analysis.MaxQueryDepthInstrumentation;
 import graphql.execution.instrumentation.ChainedInstrumentation;
 import graphql.execution.instrumentation.Instrumentation;
-import graphql.analysis.MaxQueryDepthInstrumentation;
-import graphql.analysis.MaxQueryComplexityInstrumentation;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

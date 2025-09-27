@@ -13,3 +13,4 @@ public class GraphQLLimitsProperties {
     public int getMaxComplexity() { return maxComplexity; }
     public void setMaxComplexity(int maxComplexity) { this.maxComplexity = maxComplexity; }
 }
+

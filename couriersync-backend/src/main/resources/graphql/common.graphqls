@@ -1,6 +1,7 @@
 # Escalares comunes
 scalar LocalDate
 scalar LocalDateTime
+scalar Long
 
 # Paginación estándar
 type PageInfo {

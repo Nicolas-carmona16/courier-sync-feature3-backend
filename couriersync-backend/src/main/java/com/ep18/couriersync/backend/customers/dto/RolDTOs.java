@@ -9,16 +9,16 @@ public final class RolDTOs {
     private RolDTOs() {}
 
     public record CreateRolInput(
-            @NotBlank @Size(max = 60) String nombreRol
+            @NotBlank @Size(max = 50) String nombreRol
     ) {}
 
     public record UpdateRolInput(
-            @NotNull Long idRol,
-            @NotBlank @Size(max = 60) String nombreRol
+            @NotNull Integer idRol,
+            @NotBlank @Size(max = 50) String nombreRol
     ) {}
 
     public record RolView(
-            Long idRol,
+            Integer idRol,
             String nombreRol
     ) {}
 }

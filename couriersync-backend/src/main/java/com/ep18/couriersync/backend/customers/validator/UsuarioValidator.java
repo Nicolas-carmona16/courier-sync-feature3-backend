@@ -8,8 +8,8 @@ public final class UsuarioValidator {
     private UsuarioValidator() {}
 
     /** Valida que la Ciudad pertenezca al Departamento indicado. */
-    public static void assertCiudadPerteneceADepartamento(Ciudad ciudad, Long idDepartamento) {
-        Long idDeptoCiudad = ciudad.getDepartamento().getIdDepartamento();
+    public static void assertCiudadPerteneceADepartamento(Ciudad ciudad, Integer idDepartamento) {
+        Integer idDeptoCiudad = ciudad.getDepartamento().getIdDepartamento();
         if (!idDeptoCiudad.equals(idDepartamento)) {
             throw new ValidationException("La ciudad no pertenece al departamento indicado");
         }

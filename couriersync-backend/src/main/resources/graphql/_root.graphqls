@@ -1,0 +1,8 @@
+"""Tipos raíz requeridos por el esquema. Los módulos se agregan con 'extend'."""
+type Query {
+    _bootstrap: Boolean @deprecated(reason: "Campo placeholder para definir el tipo raíz")
+}
+
+type Mutation {
+    _bootstrap: Boolean @deprecated(reason: "Campo placeholder para definir el tipo raíz")
+}

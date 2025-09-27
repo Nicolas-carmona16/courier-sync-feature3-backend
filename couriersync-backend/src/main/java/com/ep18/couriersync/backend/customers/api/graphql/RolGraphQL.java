@@ -1,10 +1,14 @@
 package com.ep18.couriersync.backend.customers.api.graphql;
 
 import com.ep18.couriersync.backend.common.dto.PagingDTOs.PageResponse;
-import com.ep18.couriersync.backend.customers.dto.RolDTOs.*;
+import com.ep18.couriersync.backend.customers.dto.RolDTOs.CreateRolInput;
+import com.ep18.couriersync.backend.customers.dto.RolDTOs.RolView;
+import com.ep18.couriersync.backend.customers.dto.RolDTOs.UpdateRolInput;
 import com.ep18.couriersync.backend.customers.service.RolService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.graphql.data.method.annotation.*;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -14,7 +18,7 @@ public class RolGraphQL {
     private final RolService service;
 
     @QueryMapping
-    public RolView rolById(@Argument Long id) {
+    public RolView rolById(@Argument Integer id) {
         return service.findById(id);
     }
 
@@ -35,7 +39,7 @@ public class RolGraphQL {
     }
 
     @MutationMapping
-    public Boolean deleteRol(@Argument Long id) {
+    public Boolean deleteRol(@Argument Integer id) {
         return service.delete(id);
     }
 }

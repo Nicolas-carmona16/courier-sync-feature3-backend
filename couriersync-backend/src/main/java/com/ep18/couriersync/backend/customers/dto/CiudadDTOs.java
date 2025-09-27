@@ -9,20 +9,20 @@ public final class CiudadDTOs {
     private CiudadDTOs() {}
 
     public record CreateCiudadInput(
-            @NotBlank @Size(max = 150) String nombreCiudad,
-            @NotNull Long idDepartamento
+            @NotBlank @Size(max = 30) String nombreCiudad,
+            @NotNull Integer idDepartamento
     ) {}
 
     public record UpdateCiudadInput(
-            @NotNull Long idCiudad,
-            @Size(max = 150) String nombreCiudad,
-            Long idDepartamento
+            @NotNull Integer idCiudad,
+            @Size(max = 30) String nombreCiudad,
+            Integer idDepartamento
     ) {}
 
     public record CiudadView(
-            Long idCiudad,
+            Integer idCiudad,
             String nombreCiudad,
-            Long idDepartamento,
+            Integer idDepartamento,
             String nombreDepartamento
     ) {}
 }

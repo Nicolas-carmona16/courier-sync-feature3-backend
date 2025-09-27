@@ -4,6 +4,13 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Local config & secrets
+src/main/resources/application-local.yml
+*.local.yml
+application-local.yml
+.env
+.env.*
+
 ### STS ###
 .apt_generated
 .classpath

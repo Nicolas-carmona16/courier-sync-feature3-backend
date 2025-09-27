@@ -1,18 +1,18 @@
 package com.ep18.couriersync.backend.customers.service;
 
 import com.ep18.couriersync.backend.common.dto.PagingDTOs.PageResponse;
-import com.ep18.couriersync.backend.common.pagination.PageMapper;
-import com.ep18.couriersync.backend.common.pagination.PageRequestUtil;
 import com.ep18.couriersync.backend.common.exception.ConflictException;
 import com.ep18.couriersync.backend.common.exception.NotFoundException;
+import com.ep18.couriersync.backend.common.pagination.PageMapper;
+import com.ep18.couriersync.backend.common.pagination.PageRequestUtil;
 import com.ep18.couriersync.backend.customers.domain.Ciudad;
-import com.ep18.couriersync.backend.customers.domain.Departamento;
 import com.ep18.couriersync.backend.customers.dto.CiudadDTOs.CreateCiudadInput;
 import com.ep18.couriersync.backend.customers.dto.CiudadDTOs.CiudadView;
 import com.ep18.couriersync.backend.customers.dto.CiudadDTOs.UpdateCiudadInput;
 import com.ep18.couriersync.backend.customers.repository.CiudadRepository;
 import com.ep18.couriersync.backend.customers.repository.DepartamentoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class CiudadService {
 
     @Transactional
     public CiudadView create(CreateCiudadInput in) {
-        Departamento depto = departamentoRepo.findById(in.idDepartamento())
+        var depto = departamentoRepo.findById(in.idDepartamento())
                 .orElseThrow(() -> new NotFoundException("Departamento no encontrado"));
 
         if (ciudadRepo.existsByNombreCiudadIgnoreCaseAndDepartamento_IdDepartamento(
@@ -35,7 +35,7 @@ public class CiudadService {
             throw new ConflictException("Ya existe una ciudad con ese nombre en el departamento");
         }
 
-        Ciudad c = new Ciudad();
+        var c = new Ciudad();
         c.setNombreCiudad(in.nombreCiudad());
         c.setDepartamento(depto);
 
@@ -44,7 +44,7 @@ public class CiudadService {
 
     @Transactional
     public CiudadView update(UpdateCiudadInput in) {
-        Ciudad c = ciudadRepo.findById(in.idCiudad())
+        var c = ciudadRepo.findById(in.idCiudad())
                 .orElseThrow(() -> new NotFoundException("Ciudad no encontrada"));
 
         if (in.nombreCiudad()!=null &&
@@ -57,10 +57,10 @@ public class CiudadService {
 
         if (in.idDepartamento()!=null &&
                 !in.idDepartamento().equals(c.getDepartamento().getIdDepartamento())) {
-            Departamento nuevo = departamentoRepo.findById(in.idDepartamento())
+            var nuevo = departamentoRepo.findById(in.idDepartamento())
                     .orElseThrow(() -> new NotFoundException("Departamento no encontrado"));
 
-            // si cambia de departamento, revalidar unicidad en el nuevo depto
+            // Revalidar unicidad en el nuevo departamento
             boolean exists = ciudadRepo.existsByNombreCiudadIgnoreCaseAndDepartamento_IdDepartamento(
                     c.getNombreCiudad(), nuevo.getIdDepartamento());
             if (exists) throw new ConflictException("Ya existe ciudad con ese nombre en el nuevo departamento");
@@ -72,13 +72,13 @@ public class CiudadService {
     }
 
     @Transactional(readOnly = true)
-    public CiudadView findById(Long id) {
+    public CiudadView findById(Integer id) {
         return ciudadRepo.findById(id).map(this::toView)
                 .orElseThrow(() -> new NotFoundException("Ciudad no encontrada"));
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<CiudadView> listByDepartamento(Long idDepartamento, Integer page, Integer size) {
+    public PageResponse<CiudadView> listByDepartamento(Integer idDepartamento, Integer page, Integer size) {
         Page<Ciudad> p = ciudadRepo.findAllByDepartamento_IdDepartamento(
                 idDepartamento, PageRequestUtil.of(page, size, Sort.by("nombreCiudad").ascending()));
         return PageMapper.map(p, this::toView);
@@ -87,15 +87,19 @@ public class CiudadService {
     @Transactional(readOnly = true)
     public PageResponse<CiudadView> search(String q, Integer page, Integer size) {
         Page<Ciudad> p = ciudadRepo.findByNombreCiudadContainingIgnoreCase(
-                q == null ? "" : q, PageRequestUtil.of(page, size, Sort.by("nombreCiudad").ascending()));
+                (q == null ? "" : q), PageRequestUtil.of(page, size, Sort.by("nombreCiudad").ascending()));
         return PageMapper.map(p, this::toView);
     }
 
     @Transactional
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         if (!ciudadRepo.existsById(id)) return false;
-        ciudadRepo.deleteById(id);
-        return true;
+        try {
+            ciudadRepo.deleteById(id);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException("No se puede eliminar: existen registros relacionados");
+        }
     }
 
     private CiudadView toView(Ciudad c) {

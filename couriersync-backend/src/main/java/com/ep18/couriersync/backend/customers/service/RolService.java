@@ -1,16 +1,17 @@
 package com.ep18.couriersync.backend.customers.service;
 
 import com.ep18.couriersync.backend.common.dto.PagingDTOs.PageResponse;
-import com.ep18.couriersync.backend.common.pagination.PageMapper;
-import com.ep18.couriersync.backend.common.pagination.PageRequestUtil;
 import com.ep18.couriersync.backend.common.exception.ConflictException;
 import com.ep18.couriersync.backend.common.exception.NotFoundException;
+import com.ep18.couriersync.backend.common.pagination.PageMapper;
+import com.ep18.couriersync.backend.common.pagination.PageRequestUtil;
 import com.ep18.couriersync.backend.customers.domain.Rol;
 import com.ep18.couriersync.backend.customers.dto.RolDTOs.CreateRolInput;
 import com.ep18.couriersync.backend.customers.dto.RolDTOs.RolView;
 import com.ep18.couriersync.backend.customers.dto.RolDTOs.UpdateRolInput;
 import com.ep18.couriersync.backend.customers.repository.RolRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,14 +28,14 @@ public class RolService {
         if (rolRepo.existsByNombreRolIgnoreCase(in.nombreRol())) {
             throw new ConflictException("Ya existe un rol con ese nombre");
         }
-        Rol r = new Rol();
+        var r = new Rol();
         r.setNombreRol(in.nombreRol());
         return toView(rolRepo.save(r));
     }
 
     @Transactional
     public RolView update(UpdateRolInput in) {
-        Rol r = rolRepo.findById(in.idRol())
+        var r = rolRepo.findById(in.idRol())
                 .orElseThrow(() -> new NotFoundException("Rol no encontrado"));
 
         if (in.nombreRol()!=null &&
@@ -42,12 +43,14 @@ public class RolService {
                 rolRepo.existsByNombreRolIgnoreCase(in.nombreRol())) {
             throw new ConflictException("Ya existe un rol con ese nombre");
         }
-        r.setNombreRol(in.nombreRol());
+        if (in.nombreRol()!=null) {
+            r.setNombreRol(in.nombreRol());
+        }
         return toView(rolRepo.save(r));
     }
 
     @Transactional(readOnly = true)
-    public RolView findById(Long id) {
+    public RolView findById(Integer id) {
         return rolRepo.findById(id).map(this::toView)
                 .orElseThrow(() -> new NotFoundException("Rol no encontrado"));
     }
@@ -59,10 +62,14 @@ public class RolService {
     }
 
     @Transactional
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         if (!rolRepo.existsById(id)) return false;
-        rolRepo.deleteById(id);
-        return true;
+        try {
+            rolRepo.deleteById(id);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            throw new ConflictException("No se puede eliminar: existen usuarios asociados a este rol");
+        }
     }
 
     private RolView toView(Rol r) {

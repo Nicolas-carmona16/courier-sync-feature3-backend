@@ -7,45 +7,58 @@ import java.time.LocalDate;
 public final class UsuarioDTOs {
     private UsuarioDTOs() {}
 
-    // Puedes ajustar el patrón de teléfono a tu realidad local si quieres endurecerlo más.
-    private static final String PHONE_REGEX = "^[+0-9()\\-\\s]{7,30}$";
+    // Teléfono exacto 10 dígitos
+    private static final String PHONE_REGEX = "^\\d{10}$";
+
+    // Contraseña fuerte: 8+, 1 mayúscula, 1 número, 1 símbolo
+    private static final String PASSWORD_REGEX = "^(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$";
 
     public record CreateUsuarioInput(
-            @NotBlank @Size(max = 120) String nombre,
-            @NotBlank @Email @Size(max = 180) String correo,
-            @NotBlank @Pattern(regexp = PHONE_REGEX, message = "Formato de teléfono inválido") @Size(max = 30) String telefono,
-            @NotNull LocalDate fechaRegistro,
-            @NotBlank @Size(max = 250) String detalleDireccion,
-            @NotNull Long idCiudad,
-            @NotNull Long idDepartamento,
-            @NotNull Long idRol
+            @NotBlank @Size(max = 50)  String nombre,
+            @NotBlank @Email @Size(max = 100) String correo,
+            @NotBlank @Pattern(regexp = PHONE_REGEX, message = "Debe ser un número de 10 dígitos") String telefono,
+            // si viene null el service usará LocalDate.now()
+            LocalDate fechaRegistro,
+            @NotBlank @Size(max = 100) String detalleDireccion,
+            @NotNull Integer idCiudad,
+            @NotNull Integer idDepartamento,
+            @NotNull Integer idRol,
+            @NotBlank
+            @Size(min = 8, max = 100)
+            @Pattern(regexp = PASSWORD_REGEX,
+                    message = "La contraseña debe tener al menos 8 caracteres, 1 mayúscula, 1 número y 1 símbolo")
+            String contrasena
     ) {}
 
     public record UpdateUsuarioInput(
-            @NotNull Long idUsuario,
-            @Size(max = 120) String nombre,
-            @Email @Size(max = 180) String correo,
-            @Pattern(regexp = PHONE_REGEX, message = "Formato de teléfono inválido") @Size(max = 30) String telefono,
+            @NotNull Integer idUsuario,
+            @Size(max = 50) String nombre,
+            @Email @Size(max = 100) String correo,
+            @Pattern(regexp = PHONE_REGEX, message = "Debe ser un número de 10 dígitos") String telefono,
             LocalDate fechaRegistro,
-            @Size(max = 250) String detalleDireccion,
-            Long idCiudad,
-            Long idDepartamento,
-            Long idRol
+            @Size(max = 100) String detalleDireccion,
+            Integer idCiudad,
+            Integer idDepartamento,
+            Integer idRol,
+            @Size(min = 8, max = 100)
+            @Pattern(regexp = PASSWORD_REGEX,
+                    message = "La contraseña debe tener al menos 8 caracteres, 1 mayúscula, 1 número y 1 símbolo")
+            String contrasena
     ) {}
 
     /** Vista “flattened” con nombres e IDs para no exponer entidades. */
     public record UsuarioView(
-            Long idUsuario,
+            Integer idUsuario,
             String nombre,
             String correo,
             String telefono,
             LocalDate fechaRegistro,
             String detalleDireccion,
-            Long idCiudad,
+            Integer idCiudad,
             String nombreCiudad,
-            Long idDepartamento,
+            Integer idDepartamento,
             String nombreDepartamento,
-            Long idRol,
+            Integer idRol,
             String nombreRol
     ) {}
 }

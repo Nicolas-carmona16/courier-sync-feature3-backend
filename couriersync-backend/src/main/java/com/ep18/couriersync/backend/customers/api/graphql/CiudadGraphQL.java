@@ -1,10 +1,13 @@
 package com.ep18.couriersync.backend.customers.api.graphql;
 
-import com.ep18.couriersync.backend.common.dto.PagingDTOs.PageResponse;
-import com.ep18.couriersync.backend.customers.dto.CiudadDTOs.*;
+import com.ep18.couriersync.backend.customers.dto.CiudadDTOs.CiudadView;
+import com.ep18.couriersync.backend.customers.dto.CiudadDTOs.CreateCiudadInput;
+import com.ep18.couriersync.backend.customers.dto.CiudadDTOs.UpdateCiudadInput;
 import com.ep18.couriersync.backend.customers.service.CiudadService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.graphql.data.method.annotation.*;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -14,12 +17,12 @@ public class CiudadGraphQL {
     private final CiudadService service;
 
     @QueryMapping
-    public CiudadView ciudadById(@Argument Long id) {
+    public CiudadView ciudadById(@Argument Integer id) {
         return service.findById(id);
     }
 
     @QueryMapping
-    public PageModels.CiudadPage ciudadesByDepartamento(@Argument Long idDepartamento,
+    public PageModels.CiudadPage ciudadesByDepartamento(@Argument Integer idDepartamento,
                                                         @Argument Integer page,
                                                         @Argument Integer size) {
         var resp = service.listByDepartamento(idDepartamento, page, size);
@@ -45,7 +48,7 @@ public class CiudadGraphQL {
     }
 
     @MutationMapping
-    public Boolean deleteCiudad(@Argument Long id) {
+    public Boolean deleteCiudad(@Argument Integer id) {
         return service.delete(id);
     }
 }

@@ -5,46 +5,34 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
- * tblciudades
- * PK: IDciudad
- * FK: IDdepartamento
+ * Tabla: public.tblciudades
  */
 @Entity
-@Table(
-        name = "tblciudades",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uk_ciudad_nombre_por_departamento",
-                        columnNames = {"nombreCiudad", "IDdepartamento"}
-                )
-        },
-        indexes = {
-                @Index(name = "idx_ciudad_departamento", columnList = "IDdepartamento")
-        }
-)
-@Getter
-@Setter
-@ToString(exclude = {"departamento"})
+@Table(name = "tblciudades", schema = "public")
+@Getter @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Ciudad extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDciudad")
+    @Column(name = "id_ciudad", nullable = false)
     @EqualsAndHashCode.Include
-    private Long idCiudad;
+    private Integer idCiudad;
 
-    @Column(name = "nombreCiudad", nullable = false, length = 150)
+    @Column(name = "nombre_ciudad", nullable = false, length = 30)
     private String nombreCiudad;
 
+    /**
+     * Columna FK en BD: "departamento" INTEGER NOT NULL
+     * Constraint: departamento_ciudad -> tbldepartamentos(id_departamento)
+     */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
-            name = "IDdepartamento",
+            name = "departamento",
             nullable = false,
-            foreignKey = @ForeignKey(name = "fk_ciudad_departamento")
+            foreignKey = @ForeignKey(name = "departamento_ciudad")
     )
     private Departamento departamento;
 }

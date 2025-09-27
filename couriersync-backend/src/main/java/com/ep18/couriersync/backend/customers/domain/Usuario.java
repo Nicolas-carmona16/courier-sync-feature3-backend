@@ -10,73 +10,66 @@ import lombok.ToString;
 import java.time.LocalDate;
 
 /**
- * tblusuarios
- * PK: IDusuario
- * FKs:ciudad, departamento, rol
- * - Unicidad práctica en correo y teléfono.
- * - Índices para FKs.
+ * Tabla: public.tblusuarios
  */
 @Entity
 @Table(
         name = "tblusuarios",
+        schema = "public",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_usuario_correo", columnNames = "correo"),
-                @UniqueConstraint(name = "uk_usuario_telefono", columnNames = "telefono")
-        },
-        indexes = {
-                @Index(name = "idx_usuario_ciudad", columnList = "ciudad"),
-                @Index(name = "idx_usuario_departamento", columnList = "departamento"),
-                @Index(name = "idx_usuario_rol", columnList = "rol")
+                @UniqueConstraint(name = "unicidad_correo", columnNames = "correo")
         }
 )
-@Getter
-@Setter
-@ToString(exclude = {"ciudad", "departamento", "rol"})
+@Getter @Setter
+@ToString(exclude = {"ciudad", "departamento", "rol", "contrasena"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Usuario extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDusuario")
+    @Column(name = "id_usuario", nullable = false)
     @EqualsAndHashCode.Include
-    private Long idUsuario;
+    private Integer idUsuario;
 
-    @Column(name = "nombre", nullable = false, length = 120)
+    @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
 
-    @Column(name = "correo", nullable = false, length = 180)
+    @Column(name = "correo", nullable = false, length = 100)
     private String correo;
 
-    @Column(name = "telefono", nullable = false, length = 30)
+    @Column(name = "telefono", nullable = false, length = 10)
     private String telefono;
 
-    @Column(name = "fechaRegistro", nullable = false)
+    @Column(name = "fecha_registro", nullable = false)
     private LocalDate fechaRegistro;
 
-    @Column(name = "detalleDireccion", nullable = false, length = 250)
+    @Column(name = "detalle_direccion", nullable = false, length = 100)
     private String detalleDireccion;
+
+    @Column(name = "contrasena", nullable = false, length = 100)
+    private String contrasena;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
-            name = "ciudad",                 // en tu DB la columna FK se llama así
+            name = "ciudad",
             nullable = false,
-            foreignKey = @ForeignKey(name = "fk_usuario_ciudad")
+            foreignKey = @ForeignKey(name = "ciudad_usuario")
     )
     private Ciudad ciudad;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
-            name = "departamento",           // en tu DB la columna FK se llama así
+            name = "departamento",
             nullable = false,
-            foreignKey = @ForeignKey(name = "fk_usuario_departamento")
+            foreignKey = @ForeignKey(name = "departamento_usuario")
     )
     private Departamento departamento;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
-            name = "rol",                    // en tu DB la columna FK se llama así
+            name = "rol",
             nullable = false,
-            foreignKey = @ForeignKey(name = "fk_usuario_rol")
+            foreignKey = @ForeignKey(name = "rol_usuario")
     )
     private Rol rol;
 }

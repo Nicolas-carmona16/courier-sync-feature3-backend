@@ -7,17 +7,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface CiudadRepository extends JpaRepository<Ciudad, Long> {
+public interface CiudadRepository extends JpaRepository<Ciudad, Integer> {
 
-    /** Unicidad: nombreCiudad dentro de un mismo departamento */
+    /** Unicidad lógica: nombreCiudad dentro de un mismo departamento */
     Optional<Ciudad> findByNombreCiudadIgnoreCaseAndDepartamento_IdDepartamento(
-            String nombreCiudad, Long idDepartamento);
+            String nombreCiudad, Integer idDepartamento);
 
     boolean existsByNombreCiudadIgnoreCaseAndDepartamento_IdDepartamento(
-            String nombreCiudad, Long idDepartamento);
+            String nombreCiudad, Integer idDepartamento);
 
     /** Listado por departamento (paginado) */
-    Page<Ciudad> findAllByDepartamento_IdDepartamento(Long idDepartamento, Pageable pageable);
+    Page<Ciudad> findAllByDepartamento_IdDepartamento(Integer idDepartamento, Pageable pageable);
 
     /** Búsqueda por nombre (paginada) */
     Page<Ciudad> findByNombreCiudadContainingIgnoreCase(String q, Pageable pageable);

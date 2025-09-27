@@ -8,28 +8,21 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * tblroles
- * PK: IDrol
+ * Tabla: public.tblroles
  */
 @Entity
-@Table(
-        name = "tblroles",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_rol_nombre", columnNames = "nombreRol")
-        }
-)
-@Getter
-@Setter
+@Table(name = "tblroles", schema = "public")
+@Getter @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 public class Rol extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDrol")
+    @Column(name = "id_rol", nullable = false)
     @EqualsAndHashCode.Include
-    private Long idRol;
+    private Integer idRol;
 
-    @Column(name = "nombreRol", nullable = false, length = 60)
+    @Column(name = "nombre_rol", nullable = false, length = 50)
     private String nombreRol;
 }

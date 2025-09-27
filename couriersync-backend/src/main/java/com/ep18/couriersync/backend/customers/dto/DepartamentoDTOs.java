@@ -9,17 +9,16 @@ public final class DepartamentoDTOs {
     private DepartamentoDTOs() {}
 
     public record CreateDepartamentoInput(
-            @NotBlank @Size(max = 120) String nombreDepartamento
+            @NotBlank @Size(max = 30) String nombreDepartamento
     ) {}
 
     public record UpdateDepartamentoInput(
-            @NotNull Long idDepartamento,
-            @NotBlank @Size(max = 120) String nombreDepartamento
+            @NotNull Integer idDepartamento,
+            @NotBlank @Size(max = 30) String nombreDepartamento
     ) {}
 
-    /** Vista de salida “plana” para API/GraphQL. */
     public record DepartamentoView(
-            Long idDepartamento,
+            Integer idDepartamento,
             String nombreDepartamento
     ) {}
 }
