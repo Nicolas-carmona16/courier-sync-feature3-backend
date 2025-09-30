@@ -30,7 +30,7 @@ jobs:
           distribution: 'temurin'
       
       - name: Cache Maven dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -40,10 +40,11 @@ jobs:
         run: ./mvnw clean package -DskipTests
       
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jar-artifact
           path: couriersync-backend/target/*.jar
+          retention-days: 1
 
   deploy-development:
     name: Deploy to Render (Development)
