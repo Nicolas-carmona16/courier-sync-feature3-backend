@@ -2,7 +2,7 @@ name: CI/CD Backend
 
 on:
   push:
-    branches: [main, dev, test-deploy]
+    branches: [main, dev]
   pull_request:
     branches: [main, dev]
 
@@ -14,7 +14,7 @@ jobs:
   build:
     name: Build Application
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/test-deploy'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
     defaults:
       run:
         working-directory: ./couriersync-backend
@@ -53,7 +53,7 @@ jobs:
     name: Deploy to Render (Development)
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/test-deploy'
+    if: github.ref == 'refs/heads/dev'
     
     steps:
       - name: Checkout code
@@ -91,4 +91,4 @@ jobs:
         if: success()
         run: |
           echo "🚀 Production deployment successful!"
-          echo "Service URL: https://your-service.onrender.com"
+          echo "Service URL: https://courier-sync-feature3-backend-1.onrender.com"
