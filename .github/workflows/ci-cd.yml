@@ -65,7 +65,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
             -H "Accept: application/json" \
             -H "Content-Type: application/json" \
-            -d '{"clearCache": false}' \
+            -d '{}' \
             "https://api.render.com/v1/services/${{ secrets.RENDER_DEV_SERVICE_ID }}/deploys"
 
   deploy-production:
@@ -84,7 +84,7 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
             -H "Accept: application/json" \
             -H "Content-Type: application/json" \
-            -d '{"clearCache": false}' \
+            -d '{}' \
             "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys"
       
       - name: Notify deployment success
