@@ -21,4 +21,11 @@ public final class PageModels {
     public record UsuarioPage(
             List<com.ep18.couriersync.backend.customers.dto.UsuarioDTOs.UsuarioView> content,
             PageInfo pageInfo) {}
+    public record DomicilioPage(
+            List<com.ep18.couriersync.backend.customers.dto.DomicilioDTOs.DomicilioView> content,
+            PageInfo pageInfo) {}
+    public record ProductoPage(
+            List<com.ep18.couriersync.backend.customers.dto.ProductoDTOs.ProductoView> content,
+            PageInfo pageInfo) {}
+
 }

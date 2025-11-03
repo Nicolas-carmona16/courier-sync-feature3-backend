@@ -1,0 +1,5 @@
+# Consultas de detalle de un domicilio; reutiliza el tipo DetalleLinea definido en domicilio.graphqls
+
+extend type Query {
+    detallesByDomicilio(idDomicilio: ID!): [DetalleLinea!]!
+}

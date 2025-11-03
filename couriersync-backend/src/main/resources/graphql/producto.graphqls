@@ -1,0 +1,38 @@
+type Producto {
+    idProducto: ID!
+    nombreProducto: String!
+    precioUnitario: Float!
+    ivaProducto: Float!
+    marca: String!
+}
+
+input CreateProductoInput {
+    nombreProducto: String!
+    precioUnitario: Float!
+    ivaProducto: Float!
+    marca: String!
+}
+
+input UpdateProductoInput {
+    idProducto: ID!
+    nombreProducto: String
+    precioUnitario: Float
+    ivaProducto: Float
+    marca: String
+}
+
+type ProductoPage {
+    content: [Producto!]!
+    pageInfo: PageInfo!
+}
+
+extend type Query {
+    productoById(id: ID!): Producto!
+    searchProductos(q: String, page: Int = 0, size: Int = 10): ProductoPage!
+}
+
+extend type Mutation {
+    createProducto(input: CreateProductoInput!): Producto!
+    updateProducto(input: UpdateProductoInput!): Producto!
+    deleteProducto(id: ID!): Boolean!
+}

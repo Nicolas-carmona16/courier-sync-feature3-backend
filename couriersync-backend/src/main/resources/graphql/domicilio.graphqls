@@ -1,0 +1,109 @@
+#=========================
+#Tipos de detalle (línea)
+#=========================
+type DetalleLinea {
+    idDetalle: ID!
+    idProducto: ID!
+    nombreProducto: String!
+    cantidad: Int!
+    precioNeto: Float!     # precio neto de la línea (sin delivery)
+}
+
+# =========================
+# Domicilio (agregado)
+# =========================
+type Domicilio {
+    idDomicilio: ID!
+
+    idUsuario: ID!
+    nombreUsuario: String!
+
+    cedulaRecibe: String!
+    fechaPedido: LocalDate!
+    fechaEntrega: LocalDate!
+
+    valorPedido: Float!
+    valorDomicilio: Float!
+    valorTotal: Float!
+
+    estado: String!
+
+    detalles: [DetalleLinea!]!
+}
+
+# =========================
+# Inputs (coinciden con DTOs)
+# =========================
+input DetalleLineaInput {
+    idProducto: ID!
+    cantidad: Int!
+    precioNeto: Float!
+}
+
+input DetalleLineaUpdateInput {
+    idDetalle: ID!
+    idProducto: ID
+    cantidad: Int
+    precioNeto: Float
+}
+
+input CreateDomicilioInput {
+    idUsuario: ID!
+    cedulaRecibe: String!
+    fechaPedido: LocalDate!
+    fechaEntrega: LocalDate!
+
+    # si no los calculas desde el backend, puedes enviarlos; si vienen null tu service los recalcula:
+    valorPedido: Float
+    valorDomicilio: Float
+    valorTotal: Float
+
+    estado: String!        # p.ej. CREADO / DESPACHADO / ENTREGADO
+
+    detalles: [DetalleLineaInput!]!
+}
+
+input UpdateDomicilioInput {
+    idDomicilio: ID!
+
+    idUsuario: ID
+    cedulaRecibe: String
+    fechaPedido: LocalDate
+    fechaEntrega: LocalDate
+
+    valorPedido: Float
+    valorDomicilio: Float
+    valorTotal: Float
+
+    estado: String
+
+    # estrategia granular de líneas:
+    addDetalles: [DetalleLineaInput!]
+    updateDetalles: [DetalleLineaUpdateInput!]
+    deleteDetalleIds: [ID!]
+}
+
+# =========================
+# Paginación
+# =========================
+type DomicilioPage {
+    content: [Domicilio!]!
+    pageInfo: PageInfo!
+}
+
+# =========================
+# Queries y Mutations
+# =========================
+extend type Query {
+domicilioById(id: ID!): Domicilio!
+
+domiciliosByUsuario(idUsuario: ID!, page: Int = 0, size: Int = 10): DomicilioPage!
+domiciliosByEstado(estado: String!, page: Int = 0, size: Int = 10): DomicilioPage!
+domiciliosByFecha(start: LocalDate!, end: LocalDate!, page: Int = 0, size: Int = 10): DomicilioPage!
+}
+
+extend type Mutation {
+createDomicilio(input: CreateDomicilioInput!): Domicilio!
+updateDomicilio(input: UpdateDomicilioInput!): Domicilio!
+deleteDomicilio(id: ID!): Boolean!
+}
