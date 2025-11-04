@@ -19,7 +19,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8080/realms/couriersync}
+          issuer-uri: ${OAUTH2_ISSUER_URI:http://localhost:8090/realms/couriersync}
 
 server:
   port: ${SERVER_PORT:8081}
@@ -36,7 +36,7 @@ management:
 
 app:
   cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,https://courier-sync-feature3-frontend.vercel.app}
   graphql:
     limits:
       max-depth: 25
